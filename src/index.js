@@ -10,7 +10,7 @@ app.use(express.urlencoded({extended:true}));
 const dotenv = require('dotenv');
 dotenv.config({path : '../config.env'});
 
-//MONGOOSE CONNECTION
+//MONGOOSE CONNECTION  
 const connectToMongo = require('../db/connection');
 connectToMongo();
 
