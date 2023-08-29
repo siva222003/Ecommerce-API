@@ -12,6 +12,8 @@ const {
   getUser,
   updateUser,
   changePassword,
+  userLogout,
+  resetPassword
 } = require("../controllers/usercontrollers");
 const {
   getAllUsers,
@@ -23,17 +25,17 @@ const {
 //POST-USER REGISTER
 router.post("/createUser", createUserValidation(), createUser);
 //POST-USER LOGIN
-router.post("/userLogin", loginUserValidation(), userLogin);
+router.post("/login", loginUserValidation(), userLogin);
 //GET-USER DETAILS
-router.get("/userDetails/:id", verifyUser, getUser);
+router.get("/:id", verifyUser, getUser);
 //PATCH-USER PROFILE UPDATE
-router.patch("/updateUser/:id", verifyUser, updateUserValidation(), updateUser);
+router.patch("/:id", verifyUser, updateUserValidation(), updateUser);
 //Change Password
-router.patch("/updatePassword", verifyUser, changePassword);
+router.patch("/password", verifyUser, changePassword);
 //USER LOGOUT
-router.post("/userLogout", (req, res) => {});
+router.post("/logout", userLogout);
 //Reset Password
-router.post("/resetPassword", (req, res) => {});
+router.post("/password",resetPassword);
 
 //ADMIN**********************************************************************************
 

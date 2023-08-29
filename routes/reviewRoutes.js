@@ -4,15 +4,15 @@ const { verifyUser } = require("../middlewares/tokenMW");
 const {updateproductValidationRules} = require('../middlewares/productMW');
 const {postReview,getAllReviews,getSingleReviews,updateReview,deleteReview} = require('../controllers/reviewControllers');
 //Post a review --- USER ONLY
-router.post('/postReview/:id',verifyUser,updateproductValidationRules(),postReview);
+router.post('/:id',verifyUser,updateproductValidationRules(),postReview);
 //Get All Reviews 
-router.get('/getAllReviews/:id',verifyUser,getAllReviews);
+router.get('/:id',verifyUser,getAllReviews);
 //Get Single Review (Review Id)
-router.get('/getSingleReview/:id',verifyUser,getSingleReviews);
+router.get('/:id',verifyUser,getSingleReviews);
 //Update a Review
-router.patch('/updateReview/:id',verifyUser,updateproductValidationRules(),updateReview);
+router.patch('/:id',verifyUser,updateproductValidationRules(),updateReview);
 //Delete a Review
-router.delete('/deleteReview/:id',verifyUser,deleteReview);
+router.delete('/:id',verifyUser,deleteReview);
 
 
 module.exports = router;

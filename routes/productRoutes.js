@@ -15,15 +15,15 @@ const {
 //USER***************************************************************************
 
 //GET ALL PRODUCTS
-router.get("/getAllProducts", verifyUser, getAllProducts);
+router.get("/", verifyUser, getAllProducts);
 //GET ONE PRODUCT
-router.get("/getProduct/:id", verifyUser, getSingleProduct);
+router.get("/:id", verifyUser, getSingleProduct);
 
 //ADMIN*************************************************************************
 
 //CREATE A PRODUCT
 router.post(
-  "/admin/createProduct",
+  "/admin",
   verifyUser,
   verifyAdmin,
   createproductValidationRules(),
@@ -31,7 +31,7 @@ router.post(
 );
 //UPDATE A PRODUCT
 router.patch(
-  "/admin/updateProduct/:id",
+  "/:id",
   verifyUser,
   verifyAdmin,
   updateproductValidationRules(),
@@ -39,7 +39,7 @@ router.patch(
 );
 //DELETE A PRODUCT
 router.delete(
-  "/admin/deleteProduct/:id",
+  "/:id",
   verifyUser,
   verifyAdmin,
   deleteProduct

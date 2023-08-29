@@ -2,7 +2,10 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 const { validationResult } = require("express-validator");
+
 //Creating User
 exports.createUser = async (req, res) => {
   try {
@@ -125,7 +128,7 @@ async (req, res) => {
   }
   try {
     //Comparing password and checking password
-    const match = await bcrypt.compare(oldpassword, user.password);
+    const match =  bcrypt.compare(oldpassword, user.password);
     if (!match) return res.status(400).json({ error: "Check your password" });
     if (newpassword !== confirmnewpassword)
       return res.status(400).json({
@@ -149,7 +152,6 @@ async (req, res) => {
 };
 
 // Change Password
-
 exports.changePassword = async (req, res) => {
   const { oldpassword, newpassword, confirmnewpassword } = req.body;
   const id = req.id;
@@ -161,7 +163,7 @@ exports.changePassword = async (req, res) => {
   }
   try {
     //Comparing password and checking password
-    const match = await bcrypt.compare(oldpassword, user.password);
+    const match =  bcrypt.compare(oldpassword, user.password);
     if (!match) return res.status(400).json({ error: "Check your password" });
     if (newpassword !== confirmnewpassword)
       return res.status(400).json({
@@ -206,3 +208,47 @@ exports.userLogout = async (req, res) => {
     res.status(500).json({ error: "some internal error occured" });
   }
 };
+
+
+exports.resetPassword = async (req, res) =>
+{
+    try{
+      //Creating a transporter for sending the link
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PASSWORD,
+        },
+      });
+        const { email } = req.body;
+
+        //Generating token for sending with reset link
+        function generateResetToken() {
+          const token = crypto.randomBytes(20).toString('hex');
+          return token;
+        }
+        const resetToken = generateResetToken();
+      
+        // Sending email with reset link
+        const mailOptions = {
+          from: process.env.EMAIL,
+          to: email,
+          subject: 'Password Reset',
+          text: `Click the following link to reset your password: ${process.env.APP_URL}/${resetToken}`,
+        };
+      
+        //Validation
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log('Error sending email:', error);
+            res.status(500).json({ message: 'Error sending reset email' });
+          } else {
+            console.log('Email sent:', info.response);
+            res.json({ message: `Password reset link sent to ${email}` });
+          }
+        });
+    }catch(err){
+      res.status(500).json({error : "some internal error occured"})
+    }
+}
